@@ -28,9 +28,9 @@
     <h1>Leonardo's Shop</h1>
    
     <button onclick="loadBooks()">Load</button>
-    
+    <input type="text" value="search" onkeyup="searchOne()">
     <div id="main">
-        <input type="text" value="search" onkeyup="searchOne()">
+        
       
     </div>
     <div id="cart">
@@ -87,16 +87,23 @@
               let searchQuery = document.querySelector("input[type=text]").value
               let books = document.querySelectorAll("#main div")
               let divMain = document.getElementById("main")
-              const filterBooks = BookCatalogue.filter(book => {book.title.indexOf(searchQuery) !== -1
-              })
+              const filterBooks = BookCatalogue.filter(book => book.title.indexOf(searchQuery) !== -1
+              
+              )
+              console.log(filterBooks)
+                  
 
               
+
+              divMain.innerHTML += filterBooks.map(book => `<div><img src=${book.img} width="100" height="100"><h4>${book.title}</h4><button onclick="addSkip(event)">SKIP</button><button onclick="addToCart(event)">Add to Cart</button></div>`).join("")
+
+
 
               
               
 
                   
-                  console.log(filterBooks)
+                  
               
 
 

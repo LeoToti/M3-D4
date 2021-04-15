@@ -57,6 +57,7 @@
         function addToCart(event) {
             let newDiv = event.target.closest("div");
             let clonedDiv = newDiv.cloneNode(true);
+            clonedDiv.innerHTML += `<button onclick="remove(event)">Remove</button>`
 
             newDiv.style.color = "pink";
 
@@ -86,6 +87,14 @@
                         `<div><img src=${book.img} width="100" height="100"><h4>${book.title}</h4><button onclick="addSkip(event)">SKIP</button><button onclick="addToCart(event)">Add to Cart</button></div>`
                 )
                 .join("");
+
+                
+        }
+        function remove (event) {
+            let newDiv = event.target.closest("div").remove()
+
+
+
         }
     </script>
 </body>

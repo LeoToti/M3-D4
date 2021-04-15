@@ -2,7 +2,8 @@
 
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <!--
             You are creating the "shopping cart experience" for a Online Marketplace.
             You have the list of the available books from the current API:
@@ -22,96 +23,71 @@
             9) Create a second "detail page" for the product. When the user clicks on a product name, the app should redirect him to the secondary page, passing the ASIN in query string
             10) In page "detail" show some details of the selected product (https://striveschool-api.herokuapp.com/books/1940026091 to fetch the details of a specific book)
         -->
-  </head>
+</head>
 
-  <body>
+<body>
     <h1>Leonardo's Shop</h1>
-   
+
     <button onclick="loadBooks()">Load</button>
-    <input type="text" value="search" onkeyup="searchOne()">
-    <div id="main">
-        
-      
-    </div>
+    <input type="text" value="search" onkeyup="searchOne()" />
+    <div id="main"></div>
     <div id="cart">
         <h2>CART</h2>
     </div>
 
     <script>
+        let BookCatalogue = [];
 
-        let BookCatalogue = []
+        function loadBooks() {
+            fetch("https://striveschool-api.herokuapp.com/books")
+                .then((response) => response.json())
+                .then((books) => {
+                    BookCatalogue = books;
+                    const myDiv = document.getElementById("main");
+                    books.forEach((book) => {
+                        //  console.log(book.img)
+                        myDiv.innerHTML += `<div><img src=${book.img} width="100" height="100"><h4>${book.title}</h4><button onclick="addSkip(event)">SKIP</button><button onclick="addToCart(event)">Add to Cart</button></div>`;
+                    });
+                })
+                .catch((err) => {
+                    console.error(err);
+                });
+        }
 
+        function addToCart(event) {
+            let newDiv = event.target.closest("div");
+            let clonedDiv = newDiv.cloneNode(true);
 
-      function loadBooks() {
-        fetch("https://striveschool-api.herokuapp.com/books")
-          .then((response) => response.json())
-          .then((books) => {
-            BookCatalogue = books
-            const myDiv = document.getElementById("main")
-            books.forEach((book) => {
-            //  console.log(book.img)
-            myDiv.innerHTML += `<div><img src=${book.img} width="100" height="100"><h4>${book.title}</h4><button onclick="addSkip(event)">SKIP</button><button onclick="addToCart(event)">Add to Cart</button></div>`
-            })
-          })
-          .catch((err) => {
-            console.error(err)
-          })
-      }
+            newDiv.style.color = "pink";
 
-      function addToCart(event) {
-          let newDiv = event.target.closest("div")
-          let clonedDiv = newDiv.cloneNode(true)
+            const myDiv2 = document.getElementById("cart");
+            // let divvy = document.querySelector("button").closest(".near.ancestor")
+            // myDiv2.innerHTML = divvy
+            myDiv2.appendChild(clonedDiv);
+        }
 
-          newDiv.style.color = "pink" 
+        function addSkip(event) {
+            event.target.closest("div").remove();
+        }
 
-          
-          
-   
-        const myDiv2 = document.getElementById("cart")
-        // let divvy = document.querySelector("button").closest(".near.ancestor")
-        // myDiv2.innerHTML = divvy
-        myDiv2.appendChild(clonedDiv)
-        
+        function searchOne() {
+            let searchQuery = document.querySelector("input[type=text]").value;
+            let books = document.querySelectorAll("#main div");
+            let divMain = document.getElementById("main");
+            const filterBooks = BookCatalogue.filter(
+                (book) => book.title.indexOf(searchQuery) !== -1
+            );
+            console.log(filterBooks);
+            divMain.innerHTML =""
 
-
-      }
-
-      function addSkip(event) {
-          event.target.closest("div").remove()
-
-          
-          }
-
-          
-          function searchOne() {
-              let searchQuery = document.querySelector("input[type=text]").value
-              let books = document.querySelectorAll("#main div")
-              let divMain = document.getElementById("main")
-              const filterBooks = BookCatalogue.filter(book => book.title.indexOf(searchQuery) !== -1
-              
-              )
-              console.log(filterBooks)
-                  
-
-              
-
-              divMain.innerHTML += filterBooks.map(book => `<div><img src=${book.img} width="100" height="100"><h4>${book.title}</h4><button onclick="addSkip(event)">SKIP</button><button onclick="addToCart(event)">Add to Cart</button></div>`).join("")
-
-
-
-              
-              
-
-                  
-                  
-              
-
-
-
-          }
-
-
-      
+            divMain.innerHTML += filterBooks
+                .map(
+                    (book) =>
+                        `<div><img src=${book.img} width="100" height="100"><h4>${book.title}</h4><button onclick="addSkip(event)">SKIP</button><button onclick="addToCart(event)">Add to Cart</button></div>`
+                )
+                .join("");
+        }
     </script>
-  </body>
+</body>
+
 </html>
